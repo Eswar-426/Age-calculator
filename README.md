@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L2PH03CRDE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L2PH03CRDE');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, violet, blue);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .calculator-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            letter-spacing: 1.5px;
+        }
+        
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            outline: none;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="date"]:hover,
+        input[type="text"]:hover,
+        select:hover {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="submit"] {
+            background: linear-gradient(135deg, violet, blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(135deg, blue, violet);
+            transform: scale(1.05);
+        }
+
+        .result-container {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            font-size: 0.9rem;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 15px 30px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h1>Age Calculator</h1>
+    <form name="ageCalculator" onsubmit="return calculateAge(event)">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" placeholder="Select your birthdate" required>
+
+        <label for="today">Today's Date:</label>
+        <input type="date" id="today" name="today" required>
+
+        <input type="submit" value="Calculate Age">
+    </form>
+    <div class="result-container" id="result"></div>
+</div>
+
+<div class="footer">
+    &copy; 2024 Age Calculator. All rights reserved.
+</div>
+
+<script>
+function calculateAge(event) {
+    event.preventDefault(); // Prevent form submission
+
+    const dob = new Date(document.getElementById('dob').value);
+    const today = new Date(document.getElementById('today').value);
+
+    if (isNaN(dob) || isNaN(today)) {
+        document.getElementById('result').innerHTML = "Please enter valid dates.";
+        return;
+    }
+
+    if (dob > today) {
+        document.getElementById('result').innerHTML = "Date of birth cannot be in the future.";
+        return;
+    }
+
+    // Calculate the difference in milliseconds
+    const diff = today - dob;
+
+    // Calculate age components
+    const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+    const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
+    const weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor(diff / (1000 * 60));
+    const seconds = Math.floor(diff / 1000);
+
+    // Calculate next birthday
+    const nextBirthday = new Date(dob);
+    nextBirthday.setFullYear(today.getFullYear());
+
+    if (today > nextBirthday) {
+        nextBirthday.setFullYear(today.getFullYear() + 1);
+    }
+
+    const daysUntilNextBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+
+    document.getElementById('result').innerHTML = `
+        <p>You are:</p>
+        <ul>
+            <li><strong>${years}</strong> years</li>
+            <li><strong>${months}</strong> months</li>
+            <li><strong>${weeks}</strong> weeks</li>
+            <li><strong>${days}</strong> days</li>
+            <li><strong>${hours}</strong> hours</li>
+            <li><strong>${minutes}</strong> minutes</li>
+            <li><strong>${seconds}</strong> seconds old</li>
+        </ul>
+        <p>Your next birthday is on <strong>${nextBirthday.toDateString()}</strong>.</p>
+        <p>There are <strong>${daysUntilNextBirthday}</strong> days left until your next birthday.</p>
+    `;
+    document.getElementById('result').style.opacity = 1;
+}
+</script>
+
+</body>
+</html>
 # Age-calculator
